@@ -11,7 +11,7 @@ strongThreshold=$5
 hyperThreshold=$6
 rageThreshold=$7
 maxSMBMinutes=$8
-if [ -z  "$6" ]; then
+if [ -z  "$8" ]; then
     echo "usage: $0 <isfNormal> <isfStrong> <isfHyper> <isfRage> <strongThreshold> <hyperThreshold> <rageThreshold> <maxSMBMinutes>"
     echo "error: $0 requires parameters, exiting."
     exit 1
