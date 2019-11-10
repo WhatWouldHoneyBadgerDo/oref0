@@ -60,10 +60,10 @@ isfScaledNormal=$(bc -l <<< "$isfNormal * $autosens")
 isfScaledStrong=$(bc -l <<< "$isfStrong * $autosens")
 isfScaledHyper=$(bc -l <<< "$isfHyper * $autosens")
 isfScaledRage=$(bc -l <<< "$isfRage * $autosens")
-jq ".sens = ${isfScaledNormal} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledNormal}" $profileFile > $profileTemp.normal
-jq ".sens = ${isfScaledStrong} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledStrong}" $profileFile > $profileTemp.strong
-jq ".sens = ${isfScaledHyper} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledHyper}" $profileFile > $profileTemp.hyper
-jq ".sens = ${isfScaledRage} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledRage}" $profileFile > $profileTemp.rage
+jq ".sens = ${isfScaledNormal} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledNormal} | .isfProfile.sensitivities[1].sensitivity = ${isfScaledNormal}" $profileFile > $profileTemp.normal
+jq ".sens = ${isfScaledStrong} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledStrong} | .isfProfile.sensitivities[1].sensitivity = ${isfScaledStrong}" $profileFile > $profileTemp.strong
+jq ".sens = ${isfScaledHyper} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledHyper} | .isfProfile.sensitivities[1].sensitivity = ${isfScaledHyper}" $profileFile > $profileTemp.hyper
+jq ".sens = ${isfScaledRage} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledRage} | .isfProfile.sensitivities[1].sensitivity = ${isfScaledRage}" $profileFile > $profileTemp.rage
 echo "isfScaledNormal = $isfScaledNormal"
 echo "isfScaledStrong = $isfScaledStrong"
 echo "isfScaledHyper = $isfScaledHyper"
