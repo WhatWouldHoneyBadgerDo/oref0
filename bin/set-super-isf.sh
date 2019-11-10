@@ -1,5 +1,5 @@
 #!/bin/bash
-# example: fourISF.sh 29 22 19 17 100 140 190 30
+# example: fourISF.sh 29 22 19 17 100 140 190 60 30
 #
 # input params:
 isfNormal=$1
@@ -11,8 +11,9 @@ strongThreshold=$5
 hyperThreshold=$6
 rageThreshold=$7
 maxSMBMinutes=$8
-if [ -z  "$8" ]; then
-    echo "usage: $0 <isfNormal> <isfStrong> <isfHyper> <isfRage> <strongThreshold> <hyperThreshold> <rageThreshold> <maxSMBMinutes>"
+maxUAMSMBMinutes=$9
+if [ -z  "$9" ]; then
+    echo "usage: $0 <isfNormal> <isfStrong> <isfHyper> <isfRage> <strongThreshold> <hyperThreshold> <rageThreshold> <maxSMBMinutes> <maxUAMSMBMinutes>"
     echo "error: $0 requires parameters, exiting."
     exit 1
 fi
@@ -47,9 +48,9 @@ if [ -z  "$which" ]; then
    echo "glucose=$glucose, using $which isf"
 fi
 jq ".sensitivity_raises_target = false | .maxSMBBasalMinutes = 1 | .maxUAMSMBBasalMinutes = 1" $preferencesFile > $preferencesTemp.normal
-jq ".sensitivity_raises_target = true | .maxSMBBasalMinutes = $maxSMBMinutes | .maxUAMSMBBasalMinutes = $maxSMBMinutes" $preferencesFile > $preferencesTemp.strong
-jq ".sensitivity_raises_target = true | .maxSMBBasalMinutes = $maxSMBMinutes | .maxUAMSMBBasalMinutes = $maxSMBMinutes" $preferencesFile > $preferencesTemp.hyper
-jq ".sensitivity_raises_target = true | .maxSMBBasalMinutes = $maxSMBMinutes | .maxUAMSMBBasalMinutes = $maxSMBMinutes" $preferencesFile > $preferencesTemp.rage
+jq ".sensitivity_raises_target = true | .maxSMBBasalMinutes = $maxSMBMinutes | .maxUAMSMBBasalMinutes = $maxUAMSMBMinutes" $preferencesFile > $preferencesTemp.strong
+jq ".sensitivity_raises_target = true | .maxSMBBasalMinutes = $maxSMBMinutes | .maxUAMSMBBasalMinutes = $maxUAMSMBMinutes" $preferencesFile > $preferencesTemp.hyper
+jq ".sensitivity_raises_target = true | .maxSMBBasalMinutes = $maxSMBMinutes | .maxUAMSMBBasalMinutes = $maxUAMSMBMinutes" $preferencesFile > $preferencesTemp.rage
 autosens=`jq .ratio ~/myopenaps/settings/autosens.json`
 echo "isfNormal = $isfNormal"
 echo "isfStrong = $isfStrong"
