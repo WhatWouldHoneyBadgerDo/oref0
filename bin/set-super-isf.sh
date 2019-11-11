@@ -47,6 +47,7 @@ if [ -z  "$which" ]; then
    fi
    echo "glucose=$glucose, using $which isf"
 fi
+
 jq ".sensitivity_raises_target = false | .maxSMBBasalMinutes = 1 | .maxUAMSMBBasalMinutes = 1" $preferencesFile > $preferencesTemp.normal
 jq ".sensitivity_raises_target = true | .maxSMBBasalMinutes = $maxSMBMinutes | .maxUAMSMBBasalMinutes = $maxUAMSMBMinutes" $preferencesFile > $preferencesTemp.strong
 jq ".sensitivity_raises_target = true | .maxSMBBasalMinutes = $maxSMBMinutes | .maxUAMSMBBasalMinutes = $maxUAMSMBMinutes" $preferencesFile > $preferencesTemp.hyper
@@ -61,15 +62,19 @@ isfScaledNormal=$(bc -l <<< "$isfNormal * $autosens")
 isfScaledStrong=$(bc -l <<< "$isfStrong * $autosens")
 isfScaledHyper=$(bc -l <<< "$isfHyper * $autosens")
 isfScaledRage=$(bc -l <<< "$isfRage * $autosens")
-jq ".sens = ${isfScaledNormal} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledNormal} | .isfProfile.sensitivities[1].sensitivity = ${isfScaledNormal}" $profileFile > $profileTemp.normal
-jq ".sens = ${isfScaledStrong} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledStrong} | .isfProfile.sensitivities[1].sensitivity = ${isfScaledStrong}" $profileFile > $profileTemp.strong
-jq ".sens = ${isfScaledHyper} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledHyper} | .isfProfile.sensitivities[1].sensitivity = ${isfScaledHyper}" $profileFile > $profileTemp.hyper
-jq ".sens = ${isfScaledRage} | .isfProfile.sensitivities[0].sensitivity = ${isfScaledRage} | .isfProfile.sensitivities[1].sensitivity = ${isfScaledRage}" $profileFile > $profileTemp.rage
+
+// change sensitivity of third item in array which is my daytime sensitivity
+jq ".sens = ${isfScaledNormal} | .isfProfile.sensitivities[2].sensitivity = ${isfScaledNormal}" $profileFile > $profileTemp.normal
+jq ".sens = ${isfScaledStrong} | .isfProfile.sensitivities[2].sensitivity = ${isfScaledStrong}" $profileFile > $profileTemp.strong
+jq ".sens = ${isfScaledHyper} | .isfProfile.sensitivities[2].sensitivity = ${isfScaledHyper}" $profileFile > $profileTemp.hyper
+jq ".sens = ${isfScaledRage} | .isfProfile.sensitivities[2].sensitivity = ${isfScaledRage}" $profileFile > $profileTemp.rage
+
 echo "isfScaledNormal = $isfScaledNormal"
 echo "isfScaledStrong = $isfScaledStrong"
 echo "isfScaledHyper = $isfScaledHyper"
 echo "isfScaledRage = $isfScaledRage"
 echo "using $which isf"
+
 # copy (change profile first to ensure ISF is weakened before target lowered):
 diff $profileTemp.$which $profileFile
 if [ $? != 0 ]
